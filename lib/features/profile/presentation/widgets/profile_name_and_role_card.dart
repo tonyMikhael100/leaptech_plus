@@ -68,7 +68,6 @@ class PorfileNameAndRoleCard extends StatelessWidget {
                 size: 20.sp,
               ),
               onPressed: () {
-                Hive.box<UserModel>('userBox').clear();
                 context.pushReplacement('/loginScreen');
               },
             ),
