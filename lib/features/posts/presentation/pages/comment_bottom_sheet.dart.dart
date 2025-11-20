@@ -75,11 +75,17 @@ class CommentBottomSheet extends StatelessWidget {
                     CircleAvatar(
                       radius: 18.r,
                       backgroundColor: AppColors.primaryColor.withOpacity(0.2),
-                      child: Icon(
-                        Icons.person,
-                        color: AppColors.primaryColor,
-                        size: 20.sp,
-                      ),
+                      child: comment.user.imageUrl != null
+                          ? CircleAvatar(
+                              radius: 18.r,
+                              backgroundImage:
+                                  NetworkImage(comment.user.imageUrl!),
+                            )
+                          : Icon(
+                              Icons.person,
+                              color: AppColors.primaryColor,
+                              size: 20.sp,
+                            ),
                     ),
                     horizontalSpace(10),
                     // Comment bubble

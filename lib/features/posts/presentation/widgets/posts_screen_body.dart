@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:leaptech_plus/core/themes/app_text_styles.dart';
 import 'package:leaptech_plus/core/widgets/app_card.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_model.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_user_model.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_with_relation_model.dart';
 import 'package:leaptech_plus/features/posts/presentation/cubits/posts_cubit.dart';
 import 'package:leaptech_plus/features/posts/presentation/widgets/post_item.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class PostsScreenBody extends StatefulWidget {
   const PostsScreenBody({
@@ -31,20 +35,17 @@ class _PostsScreenBodyState extends State<PostsScreenBody> {
             style: AppTextStyles.font16WhiteBold,
           ),
         ),
-        BlocConsumer<PostsCubit, PostsState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
+        BlocBuilder<PostsCubit, PostsState>(
           builder: (context, state) {
             if (state is PostsGetAllPostsLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return _buildLoadingPosts();
             }
             if (state is PostsGetAllPostsSuccess) {
               return Expanded(
                 child: ListView.builder(
                   itemCount: state.posts.length,
                   itemBuilder: (context, index) {
-                    return PostItem(postWithRelation:state.posts[index]);
+                    return PostItem(postWithRelation: state.posts[index]);
                   },
                 ),
               );
@@ -69,6 +70,30 @@ class _PostsScreenBodyState extends State<PostsScreenBody> {
           },
         ),
       ],
+    );
+  }
+
+  _buildLoadingPosts() {
+    return Expanded(
+      child: Skeletonizer(
+        enabled: true,
+        child: ListView.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) {
+            return PostItem(
+              postWithRelation: PostWithRelations(
+                  post: PostModel(
+                      id: 'id',
+                      userId: 'userId',
+                      createdAt: DateTime.now(),
+                      user: PostUserModel(id: 'id', fullName: 'fullName')),
+                  comments: [],
+                  likes: [],
+                  images: []),
+            );
+          },
+        ),
+      ),
     );
   }
 }
