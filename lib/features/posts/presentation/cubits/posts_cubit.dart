@@ -62,7 +62,7 @@ class PostsCubit extends Cubit<PostsState> {
       (failure) {
         allPosts[postIndex] = post; // revert
         emit(PostsGetAllPostsFailure(failure.errorMessage));
-        emit(PostsGetAllPostsSuccess(List.from(allPosts)));
+        emit(PostsGetAllPostsSuccess(allPosts));
       },
       (_) {
         // optionally refresh from server
