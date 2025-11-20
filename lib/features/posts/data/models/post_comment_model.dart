@@ -1,31 +1,29 @@
 import 'package:leaptech_plus/features/posts/data/models/post_user_model.dart';
 
-class PostModel {
+class PostCommentModel {
   final String id;
+  final String postId;
   final String userId;
-  final String? content;
+  final String content;
   final DateTime createdAt;
-  final DateTime? updatedAt;
   final PostUserModel user; // added user info
 
-  PostModel({
+  PostCommentModel({
     required this.id,
+    required this.postId,
     required this.userId,
-    this.content,
+    required this.content,
     required this.createdAt,
-    this.updatedAt,
     required this.user,
   });
 
-  factory PostModel.fromMap(Map<String, dynamic> map) {
-    return PostModel(
+  factory PostCommentModel.fromMap(Map<String, dynamic> map) {
+    return PostCommentModel(
       id: map['id'] as String,
+      postId: map['post_id'] as String,
       userId: map['user_id'] as String,
-      content: map['content'] as String?,
+      content: map['content'] as String,
       createdAt: DateTime.parse(map['created_at'] as String),
-      updatedAt: map['updated_at'] != null
-          ? DateTime.parse(map['updated_at'] as String)
-          : null,
       user: PostUserModel.fromMap(map['user'] as Map<String, dynamic>),
     );
   }

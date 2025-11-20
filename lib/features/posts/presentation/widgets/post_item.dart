@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leaptech_plus/core/themes/app_text_styles.dart';
 import 'package:leaptech_plus/core/utils/spacing.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_model.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_with_relation_model.dart';
 import 'package:leaptech_plus/features/posts/presentation/widgets/post_item_footer.dart';
 import 'package:leaptech_plus/features/posts/presentation/widgets/post_item_header.dart';
 import 'package:leaptech_plus/features/posts/presentation/widgets/post_item_image.dart';
@@ -9,7 +11,9 @@ import 'package:leaptech_plus/features/posts/presentation/widgets/post_item_imag
 class PostItem extends StatelessWidget {
   const PostItem({
     super.key,
+    required this.postWithRelation,
   });
+  final PostWithRelations postWithRelation;
 
   @override
   Widget build(BuildContext context) {
@@ -32,22 +36,23 @@ class PostItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Post header
-          const PostItemHeader(),
-
+          PostItemHeader(
+            postModel: postWithRelation.post,
+          ),
           Divider(),
-
           // Post text
           Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+            postWithRelation.post.content ?? '',
             style: AppTextStyles.font12BlackRegular,
           ),
-
-          // Post image grid
-          const PostItemImage(),
+          PostItemImage(
+            images: postWithRelation.images,
+          ),
           Divider(),
-
           // Post footer
-          PostItemFooter(),
+          PostItemFooter(
+            postWithRelations: postWithRelation,
+          ),
         ],
       ),
     );

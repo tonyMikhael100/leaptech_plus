@@ -17,8 +17,7 @@ class SupabaseTestScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            final events = await supabaseService.getAllEvents();
-            print('Events: $events');
+            await supabaseService.getAllPostsWithRelations();
           },
           child: const Text('Run Supabase Method'),
         ),

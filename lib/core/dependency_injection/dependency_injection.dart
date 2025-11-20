@@ -9,6 +9,9 @@ import 'package:leaptech_plus/features/home/data/repo/home_repo_impl.dart';
 import 'package:leaptech_plus/features/home/presentation/cubits/cubit/home_cubit.dart';
 import 'package:leaptech_plus/features/login/data/repo/login_repo_impl.dart';
 import 'package:leaptech_plus/features/login/presentation/cubits/cubit/login_cubit.dart';
+import 'package:leaptech_plus/features/posts/data/repo/posts_repo.dart';
+import 'package:leaptech_plus/features/posts/data/repo/posts_repo_impl.dart';
+import 'package:leaptech_plus/features/posts/presentation/cubits/posts_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -38,9 +41,14 @@ Future<void> setupGetIt() async {
       getIt<SupabaseService>(),
     ),
   );
+  getIt.registerLazySingleton<PostsRepoImpl>(
+    () => PostsRepoImpl(
+      supabaseService: getIt<SupabaseService>(),
+    ),
+  );
 
   // Cubits (better to be factories)
   getIt.registerFactory<LoginCubit>(() => LoginCubit(getIt<LoginRepoImpl>()));
-  getIt
-      .registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepoImpl>()));
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepoImpl>()));
+  getIt.registerFactory<PostsCubit>(() => PostsCubit(getIt<PostsRepoImpl>()));
 }

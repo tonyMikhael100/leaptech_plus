@@ -3,28 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leaptech_plus/core/themes/app_colors.dart';
 import 'package:leaptech_plus/core/themes/app_text_styles.dart';
 import 'package:leaptech_plus/core/utils/spacing.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_comment_model.dart';
 
-class CommentBottomSheet extends StatefulWidget {
-  const CommentBottomSheet({super.key});
+class CommentBottomSheet extends StatelessWidget {
+  const CommentBottomSheet({super.key, required this.comments});
 
-  @override
-  State<CommentBottomSheet> createState() => _CommentBottomSheetState();
-}
-
-class _CommentBottomSheetState extends State<CommentBottomSheet> {
-  final TextEditingController _commentController = TextEditingController();
-
-  // Each comment has a name and text
-  final List<Map<String, String>> comments = [
-    {
-      "name": "Ali",
-      "text":
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {"name": "Sara", "text": "Great work!"},
-    {"name": "Ahmed", "text": "Looks very clean 😍"},
-    {"name": "Layla", "text": "Keep it up 💪"},
-  ];
+  final List<PostCommentModel> comments;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +94,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              comment["name"] ?? "",
+                              comment.user.fullName ?? "",
                               style: AppTextStyles.font14BlackMedium.copyWith(
                                 color: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -118,7 +102,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              comment["text"] ?? "",
+                              comment.content ?? "",
                               style: AppTextStyles.font14BlackMedium,
                             ),
                           ],
@@ -159,7 +143,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: TextField(
-                        controller: _commentController,
+                        // controller: _commentController,
                         decoration: const InputDecoration(
                           hintText: "Add a comment...",
                           border: InputBorder.none,
@@ -171,14 +155,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   // Send button
                   GestureDetector(
                     onTap: () {
-                      if (_commentController.text.trim().isEmpty) return;
-                      setState(() {
-                        comments.insert(0, {
-                          "name": "You",
-                          "text": _commentController.text.trim(),
-                        });
-                        _commentController.clear();
-                      });
+                      //
                     },
                     child: CircleAvatar(
                       radius: 22.r,

@@ -2,28 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PostItemImage extends StatelessWidget {
-  const PostItemImage({super.key});
+  const PostItemImage({super.key, required this.images});
 
-// don't forget to handle depend on the response , if the post containt one image make it cross Axis count =1, else = 2
+  final List<String> images;
+
   @override
   Widget build(BuildContext context) {
+    if (images.isEmpty) return const SizedBox();
+
     return GridView.builder(
-      shrinkWrap: true, // ✅ allows grid to size itself inside Column
-      physics:
-          const NeverScrollableScrollPhysics(), // ✅ prevent inner scroll conflict
-      itemCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: images.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1 == 2 ? 1 : 2,
+        crossAxisCount: images.length == 1 ? 1 : 2,
         crossAxisSpacing: 10.w,
         mainAxisSpacing: 10.h,
-        childAspectRatio: 1.4, // keep images square
+        childAspectRatio: 1.4,
       ),
       itemBuilder: (context, index) {
+        final imageUrl = images[index];
+
         return ClipRRect(
           borderRadius: BorderRadius.circular(12.r),
-          child: Image.asset(
-            'assets/images/post_sample.png',
-            fit: BoxFit.contain,
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: Colors.grey[300],
+              child: const Icon(Icons.broken_image),
+            ),
           ),
         );
       },

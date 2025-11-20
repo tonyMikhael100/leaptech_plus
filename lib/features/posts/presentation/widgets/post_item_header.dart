@@ -1,20 +1,26 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:leaptech_plus/core/themes/app_text_styles.dart';
 import 'package:leaptech_plus/core/utils/spacing.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_model.dart';
 
 class PostItemHeader extends StatelessWidget {
-  const PostItemHeader({super.key});
+  const PostItemHeader({super.key, required this.postModel});
+  final PostModel postModel;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage('assets/images/person.png')),
+          radius: 20,
+          backgroundImage: postModel.user.imageUrl == null
+              ? null
+              : CachedNetworkImageProvider(postModel.user.imageUrl!),
+        ),
         horizontalSpace(10),
         Text(
-          'Tony mikhael',
+          postModel.user.fullName,
           style: AppTextStyles.font14BlackMedium,
         ),
         Spacer(),

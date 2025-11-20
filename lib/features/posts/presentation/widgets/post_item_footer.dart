@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:leaptech_plus/core/utils/spacing.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_model.dart';
+import 'package:leaptech_plus/features/posts/data/models/post_with_relation_model.dart';
 import 'package:leaptech_plus/features/posts/presentation/pages/comment_bottom_sheet.dart.dart';
 
-class PostItemFooter extends StatefulWidget {
-  const PostItemFooter({super.key});
+class PostItemFooter extends StatelessWidget {
+  const PostItemFooter({super.key, required this.postWithRelations});
 
-  @override
-  State<PostItemFooter> createState() => _PostItemFooterState();
-}
-
-class _PostItemFooterState extends State<PostItemFooter> {
-  bool isLiked = false;
-  int likeCount = 42;
-  int commentCount = 8;
-
-  void toggleLike() {
-    setState(() {
-      isLiked = !isLiked;
-      likeCount += isLiked ? 1 : -1;
-    });
-  }
+  final PostWithRelations postWithRelations;
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +16,16 @@ class _PostItemFooterState extends State<PostItemFooter> {
       children: [
         // ❤️ Like button
         GestureDetector(
-          onTap: toggleLike,
+          onTap: () {},
           child: Row(
             children: [
-              AnimatedScale(
-                scale: isLiked ? 1.3 : 1.0,
-                duration: const Duration(milliseconds: 150),
-                child: Icon(
-                  isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: isLiked ? Colors.red : Colors.black54,
-                ),
+              Icon(
+                Icons.favorite,
+                color: Colors.grey,
               ),
               horizontalSpace(4),
               Text(
-                '$likeCount',
+                postWithRelations.likes.length.toString(),
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: Colors.black87,
@@ -64,7 +48,9 @@ class _PostItemFooterState extends State<PostItemFooter> {
               backgroundColor: Colors.transparent,
               builder: (_) => SizedBox(
                 height: MediaQuery.of(context).size.height * 0.75,
-                child: const CommentBottomSheet(),
+                child: CommentBottomSheet(
+                  comments: postWithRelations.comments,
+                ),
               ),
             );
           },
@@ -73,7 +59,7 @@ class _PostItemFooterState extends State<PostItemFooter> {
               const Icon(Icons.mode_comment_outlined, color: Colors.black54),
               horizontalSpace(4),
               Text(
-                '$commentCount',
+                postWithRelations.comments.length.toString(),
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: Colors.black87,

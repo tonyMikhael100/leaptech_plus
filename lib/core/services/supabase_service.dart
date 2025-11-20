@@ -50,7 +50,7 @@ class SupabaseService {
   }
 
   Future<List<Map<String, dynamic>>> getAllEvents() async {
-  final response = await _client.from('events').select('''
+    final response = await _client.from('events').select('''
       id,
       name,
       about,
@@ -60,33 +60,49 @@ class SupabaseService {
       organizer:employees(full_name)
     ''').order('event_time', ascending: true);
 
-  final data = response as List<dynamic>;
-  final now = DateTime.now();
+    final data = response as List<dynamic>;
+    final now = DateTime.now();
 
-  final upcomingEvents = data.where((e) {
-    final eventTime = DateTime.parse(e['event_time']).toLocal();
-    final durationMinutes = (e['duration'] as num).toDouble() * 60;
-    final eventEndTime = eventTime.add(Duration(minutes: durationMinutes.toInt()));
-    return eventEndTime.isAfter(now);
-  }).toList();
+    final upcomingEvents = data.where((e) {
+      final eventTime = DateTime.parse(e['event_time']).toLocal();
+      final durationMinutes = (e['duration'] as num).toDouble() * 60;
+      final eventEndTime =
+          eventTime.add(Duration(minutes: durationMinutes.toInt()));
+      return eventEndTime.isAfter(now);
+    }).toList();
 
-  return upcomingEvents.map((e) {
-    return {
-      'id': e['id'],
-      'name': e['name'],
-      'about': e['about'],
-      'event_time': e['event_time'], // return as string
-      'duration': (e['duration'] as num).toDouble(),
-      'location': e['location'],
-      'organizerName': e['organizer']?['full_name'] ?? '',
-    };
-  }).toList();
-}
+    return upcomingEvents.map((e) {
+      return {
+        'id': e['id'],
+        'name': e['name'],
+        'about': e['about'],
+        'event_time': e['event_time'], // return as string
+        'duration': (e['duration'] as num).toDouble(),
+        'location': e['location'],
+        'organizerName': e['organizer']?['full_name'] ?? '',
+      };
+    }).toList();
+  }
 
   /// DELETE event
   Future<void> deleteEvent({
     required int id,
   }) {
     return _client.from('events').delete().eq('id', id);
+  }
+
+  // ---------------posts ---------------------
+
+  Future<List<Map<String, dynamic>>> getAllPostsWithRelations() async {
+    final response = await _client.from('posts').select('''
+        *,
+        post_comments(*, user:employees(id, full_name, image_url)),
+        post_likes(user:employees(id, full_name, image_url)),
+        post_images(image_url),
+        user:employees(id, full_name, image_url)
+      ''').order('created_at', ascending: false);
+
+    final data = response as List<dynamic>? ?? [];
+    return data.map((e) => e as Map<String, dynamic>).toList();
   }
 }
