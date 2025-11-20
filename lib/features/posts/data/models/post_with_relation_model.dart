@@ -25,9 +25,9 @@ class PostWithRelations {
   }) {
     return PostWithRelations(
       post: post ?? this.post,
-      comments: comments ?? List.from(this.comments),
-      likes: likes ?? List.from(this.likes),
-      images: images ?? List.from(this.images),
+      comments: comments ?? this.comments,
+      likes: likes ?? this.likes,
+      images: images ?? this.images,
     );
   }
 }

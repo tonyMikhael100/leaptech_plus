@@ -8,21 +8,16 @@ import 'package:leaptech_plus/features/posts/data/models/post_with_relation_mode
 import 'package:leaptech_plus/features/posts/presentation/cubits/posts_cubit.dart';
 import 'package:leaptech_plus/features/posts/presentation/pages/comment_bottom_sheet.dart.dart';
 
-class PostItemFooter extends StatefulWidget {
+class PostItemFooter extends StatelessWidget {
   final PostWithRelations postWithRelations;
   final PostUserModel currentUser;
 
-  PostItemFooter({
+  const PostItemFooter({
     super.key,
     required this.postWithRelations,
     required this.currentUser,
   });
 
-  @override
-  State<PostItemFooter> createState() => _PostItemFooterState();
-}
-
-class _PostItemFooterState extends State<PostItemFooter> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -31,19 +26,16 @@ class _PostItemFooterState extends State<PostItemFooter> {
         GestureDetector(
           onTap: () {
             context.read<PostsCubit>().toggleLike(
-                  postId: widget.postWithRelations.post.id,
-                  currentUser: widget.currentUser,
+                  postId: postWithRelations.post.id,
+                  currentUser: currentUser,
                 );
-            setState(() {
-              widget.postWithRelations.likes.add(widget.currentUser);
-            });
           },
           child: BlocBuilder<PostsCubit, PostsState>(
             builder: (context, state) {
               final cubit = context.read<PostsCubit>();
               final post = cubit.allPosts.firstWhere(
-                (p) => p.post.id == widget.postWithRelations.post.id,
-                orElse: () => widget.postWithRelations,
+                (p) => p.post.id == postWithRelations.post.id,
+                orElse: () => postWithRelations,
               );
               final isLiked =
                   post.likes.any((user) => user.id == getCurrentUser()!.id);
@@ -78,7 +70,7 @@ class _PostItemFooterState extends State<PostItemFooter> {
               builder: (_) => SizedBox(
                 height: MediaQuery.of(context).size.height * 0.75,
                 child: CommentBottomSheet(
-                  comments: widget.postWithRelations.comments,
+                  comments: postWithRelations.comments,
                 ),
               ),
             );
@@ -88,7 +80,7 @@ class _PostItemFooterState extends State<PostItemFooter> {
               const Icon(Icons.mode_comment_outlined, color: Colors.black54),
               horizontalSpace(4),
               Text(
-                widget.postWithRelations.comments.length.toString(),
+                postWithRelations.comments.length.toString(),
                 style: TextStyle(
                   fontSize: 13.sp,
                   color: Colors.black87,

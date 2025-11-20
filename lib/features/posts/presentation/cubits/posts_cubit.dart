@@ -35,7 +35,7 @@ class PostsCubit extends Cubit<PostsState> {
     if (postIndex == -1) return;
 
     final post = allPosts[postIndex];
-    final likes = List<PostUserModel>.from(post.likes);
+    final likes = post.likes;
 
     // 2️⃣ Check if user already liked
     final alreadyLiked = likes.any((user) => user.id == currentUser.id);
@@ -49,7 +49,7 @@ class PostsCubit extends Cubit<PostsState> {
 
     // 4️⃣ Optimistic update
     allPosts[postIndex] = post.copyWith(likes: likes);
-    emit(PostsGetAllPostsSuccess(List.from(allPosts)));
+    emit(PostsGetAllPostsSuccess(allPosts));
 
     // 5️⃣ Server request
     final response = await _postsRepo.toggleLike(
